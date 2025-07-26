@@ -113,13 +113,7 @@ def batch_convert(input_dir: Union[str, Path], output_dir: Union[str, Path], rec
     ignored_count = len(non_msg_files)
 
     if not msg_files:
-        stats = {
-            "msg_files_found": 0,
-            "files_converted": 0,
-            "files_failed": 0,
-            "files_ignored": ignored_count,
-            "recursive": recursive
-        }
+        stats = {"msg_files_found": 0, "files_converted": 0, "files_failed": 0, "files_ignored": ignored_count, "recursive": recursive}
         print(f"No MSG files found in {input_path}")
         if ignored_count > 0:
             print(f"⚠️  {ignored_count} non-MSG files ignored")
@@ -127,7 +121,7 @@ def batch_convert(input_dir: Union[str, Path], output_dir: Union[str, Path], rec
 
     success_count = 0
     failed_files = []
-    
+
     for msg_file in msg_files:
         # Maintain directory structure in output
         if recursive:
@@ -137,7 +131,7 @@ def batch_convert(input_dir: Union[str, Path], output_dir: Union[str, Path], rec
             eml_file.parent.mkdir(parents=True, exist_ok=True)
         else:
             eml_file = output_path / f"{msg_file.stem}.eml"
-        
+
         try:
             convert_msg_to_eml(msg_file, eml_file)
             success_count += 1
@@ -158,5 +152,5 @@ def batch_convert(input_dir: Union[str, Path], output_dir: Union[str, Path], rec
         "files_failed": len(failed_files),
         "files_ignored": ignored_count,
         "failed_files": failed_files,
-        "recursive": recursive
+        "recursive": recursive,
     }

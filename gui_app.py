@@ -198,14 +198,14 @@ class MSGToEMLApp:
         try:
             self.progress.start()
             self.log_message(f"Starting batch conversion from: {input_dir}")
-            
+
             recursive = self.recursive_var.get()
             if recursive:
                 self.log_message("🔍 Searching subdirectories recursively...")
-            
+
             # Use the updated batch_convert function
             stats = batch_convert(input_dir, output_dir, recursive=recursive)
-            
+
             # Log detailed results
             if stats["msg_files_found"] == 0:
                 self.log_message(f"❌ No MSG files found in {input_dir}")
@@ -213,25 +213,25 @@ class MSGToEMLApp:
                     self.log_message(f"⚠️  {stats['files_ignored']} non-MSG files ignored")
                 messagebox.showwarning("No MSG Files", "No MSG files found in the selected folder.")
                 return
-            
+
             self.log_message(f"📊 Found {stats['msg_files_found']} MSG files")
             if stats["files_ignored"] > 0:
                 self.log_message(f"⚠️  {stats['files_ignored']} non-MSG files ignored")
-            
+
             # Show conversion results
             if stats["files_converted"] > 0:
                 self.log_message(f"✅ Successfully converted {stats['files_converted']} files")
-            
+
             if stats["files_failed"] > 0:
                 self.log_message(f"❌ Failed to convert {stats['files_failed']} files")
                 for failed_file in stats.get("failed_files", []):
                     self.log_message(f"   • {Path(failed_file).name}")
-            
+
             # Final summary
             result_msg = f"Batch conversion complete!\n{stats['files_converted']}/{stats['msg_files_found']} MSG files converted successfully."
             if stats["files_ignored"] > 0:
                 result_msg += f"\n{stats['files_ignored']} non-MSG files were ignored."
-            
+
             self.log_message(f"🎉 Conversion complete!")
             messagebox.showinfo("Batch Conversion Complete", result_msg)
 
