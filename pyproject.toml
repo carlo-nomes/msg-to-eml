@@ -5,12 +5,12 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "msg-to-eml"
 version = "0.1.0"
-description = "Convert MSG files to EML format"
+description = "Convert MSG files to EML format (AI-generated project)"
 readme = "README.md"
 requires-python = ">=3.8"
 license = {text = "MIT"}
 authors = [
-    {name = "Your Name", email = "your.email@example.com"},
+    {name = "AI (GitHub Copilot)", email = "ai-generated@example.com"},
 ]
 classifiers = [
     "Development Status :: 3 - Alpha",
