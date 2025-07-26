@@ -83,7 +83,12 @@ class MSGToEMLApp:
         self.batch_output.grid(row=1, column=1, sticky=(tk.W, tk.E), padx=(0, 10), pady=(10, 0))
         ttk.Button(batch_frame, text="Browse", command=self.browse_batch_output).grid(row=1, column=2, pady=(10, 0))
 
-        ttk.Button(batch_frame, text="Convert All Files", command=self.convert_batch).grid(row=2, column=1, pady=(15, 0))
+        # Recursive option
+        self.recursive_var = tk.BooleanVar(value=True)
+        recursive_check = ttk.Checkbutton(batch_frame, text="Search subfolders recursively", variable=self.recursive_var)
+        recursive_check.grid(row=2, column=0, columnspan=2, sticky=tk.W, pady=(10, 0))
+
+        ttk.Button(batch_frame, text="Convert All Files", command=self.convert_batch).grid(row=3, column=1, pady=(15, 0))
 
         # Progress bar
         self.progress = ttk.Progressbar(main_frame, mode="indeterminate")
@@ -104,6 +109,7 @@ class MSGToEMLApp:
         # Initial status message
         self.log_message("Ready to convert MSG files to EML format!")
         self.log_message("Choose single file conversion or batch conversion for multiple files.")
+        self.log_message("📁 Batch mode supports recursive directory scanning (searches subfolders).")
 
     def browse_single_input(self):
         filename = filedialog.askopenfilename(title="Select MSG file", filetypes=[("MSG files", "*.msg"), ("All files", "*.*")])
@@ -192,40 +198,41 @@ class MSGToEMLApp:
         try:
             self.progress.start()
             self.log_message(f"Starting batch conversion from: {input_dir}")
-
-            # Custom batch convert with logging
-            input_path = Path(input_dir)
-            output_path = Path(output_dir)
-
-            if not input_path.exists():
-                raise FileNotFoundError(f"Input directory not found: {input_path}")
-
-            # Create output directory
-            output_path.mkdir(parents=True, exist_ok=True)
-
-            # Find all MSG files
-            msg_files = list(input_path.glob("*.msg"))
-
-            if not msg_files:
-                self.log_message(f"❌ No MSG files found in {input_path}")
-                messagebox.showwarning("Warning", f"No MSG files found in the selected folder.")
+            
+            recursive = self.recursive_var.get()
+            if recursive:
+                self.log_message("🔍 Searching subdirectories recursively...")
+            
+            # Use the updated batch_convert function
+            stats = batch_convert(input_dir, output_dir, recursive=recursive)
+            
+            # Log detailed results
+            if stats["msg_files_found"] == 0:
+                self.log_message(f"❌ No MSG files found in {input_dir}")
+                if stats["files_ignored"] > 0:
+                    self.log_message(f"⚠️  {stats['files_ignored']} non-MSG files ignored")
+                messagebox.showwarning("No MSG Files", "No MSG files found in the selected folder.")
                 return
-
-            self.log_message(f"Found {len(msg_files)} MSG files to convert...")
-
-            success_count = 0
-            for i, msg_file in enumerate(msg_files, 1):
-                eml_file = output_path / f"{msg_file.stem}.eml"
-                try:
-                    self.log_message(f"[{i}/{len(msg_files)}] Converting: {msg_file.name}")
-                    convert_msg_to_eml(msg_file, eml_file)
-                    success_count += 1
-                    self.log_message(f"✅ Success: {eml_file.name}")
-                except Exception as e:
-                    self.log_message(f"❌ Failed: {msg_file.name} - {str(e)}")
-
-            result_msg = f"Batch conversion complete!\n{success_count}/{len(msg_files)} files converted successfully."
-            self.log_message(f"🎉 {result_msg}")
+            
+            self.log_message(f"📊 Found {stats['msg_files_found']} MSG files")
+            if stats["files_ignored"] > 0:
+                self.log_message(f"⚠️  {stats['files_ignored']} non-MSG files ignored")
+            
+            # Show conversion results
+            if stats["files_converted"] > 0:
+                self.log_message(f"✅ Successfully converted {stats['files_converted']} files")
+            
+            if stats["files_failed"] > 0:
+                self.log_message(f"❌ Failed to convert {stats['files_failed']} files")
+                for failed_file in stats.get("failed_files", []):
+                    self.log_message(f"   • {Path(failed_file).name}")
+            
+            # Final summary
+            result_msg = f"Batch conversion complete!\n{stats['files_converted']}/{stats['msg_files_found']} MSG files converted successfully."
+            if stats["files_ignored"] > 0:
+                result_msg += f"\n{stats['files_ignored']} non-MSG files were ignored."
+            
+            self.log_message(f"🎉 Conversion complete!")
             messagebox.showinfo("Batch Conversion Complete", result_msg)
 
         except Exception as e:

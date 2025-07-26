@@ -79,13 +79,17 @@ def convert_msg_to_eml(msg_path: Union[str, Path], eml_path: Union[str, Path]) -
         raise ValueError(f"Failed to convert MSG file: {e}")
 
 
-def batch_convert(input_dir: Union[str, Path], output_dir: Union[str, Path]) -> None:
+def batch_convert(input_dir: Union[str, Path], output_dir: Union[str, Path], recursive: bool = True) -> dict:
     """
     Convert all MSG files in a directory to EML format.
 
     Args:
         input_dir: Directory containing MSG files
         output_dir: Directory to save EML files
+        recursive: Whether to search subdirectories recursively
+
+    Returns:
+        Dictionary with conversion statistics
     """
     input_path = Path(input_dir)
     output_path = Path(output_dir)
@@ -96,20 +100,63 @@ def batch_convert(input_dir: Union[str, Path], output_dir: Union[str, Path]) -> 
     # Create output directory
     output_path.mkdir(parents=True, exist_ok=True)
 
-    # Find all MSG files
-    msg_files = list(input_path.glob("*.msg"))
+    # Find all MSG files (recursively or just in current directory)
+    if recursive:
+        msg_files = list(input_path.rglob("*.msg"))
+        all_files = list(input_path.rglob("*"))
+    else:
+        msg_files = list(input_path.glob("*.msg"))
+        all_files = list(input_path.glob("*"))
+
+    # Count non-MSG files (excluding directories)
+    non_msg_files = [f for f in all_files if f.is_file() and f.suffix.lower() != ".msg"]
+    ignored_count = len(non_msg_files)
 
     if not msg_files:
+        stats = {
+            "msg_files_found": 0,
+            "files_converted": 0,
+            "files_failed": 0,
+            "files_ignored": ignored_count,
+            "recursive": recursive
+        }
         print(f"No MSG files found in {input_path}")
-        return
+        if ignored_count > 0:
+            print(f"⚠️  {ignored_count} non-MSG files ignored")
+        return stats
 
     success_count = 0
+    failed_files = []
+    
     for msg_file in msg_files:
-        eml_file = output_path / f"{msg_file.stem}.eml"
+        # Maintain directory structure in output
+        if recursive:
+            relative_path = msg_file.relative_to(input_path)
+            eml_file = output_path / relative_path.with_suffix(".eml")
+            # Create subdirectories if needed
+            eml_file.parent.mkdir(parents=True, exist_ok=True)
+        else:
+            eml_file = output_path / f"{msg_file.stem}.eml"
+        
         try:
             convert_msg_to_eml(msg_file, eml_file)
             success_count += 1
         except Exception as e:
             print(f"Failed to convert {msg_file}: {e}")
+            failed_files.append(str(msg_file))
 
+    # Print summary
     print(f"Successfully converted {success_count}/{len(msg_files)} MSG files to EML format")
+    if ignored_count > 0:
+        print(f"⚠️  {ignored_count} non-MSG files ignored")
+    if recursive:
+        print(f"📁 Searched recursively in subdirectories")
+
+    return {
+        "msg_files_found": len(msg_files),
+        "files_converted": success_count,
+        "files_failed": len(failed_files),
+        "files_ignored": ignored_count,
+        "failed_files": failed_files,
+        "recursive": recursive
+    }
