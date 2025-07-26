@@ -1,0 +1,12 @@
+# Git attributes for MSG to EML converter project
+*.py text eol=lf
+*.md text eol=lf
+*.txt text eol=lf
+*.toml text eol=lf
+*.json text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+
+# Binary files
+*.msg binary
+*.eml binary
