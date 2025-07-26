@@ -1,0 +1,48 @@
+#!/usr/bin/env python3
+"""
+Example usage of the MSG to EML converter.
+
+This script demonstrates how to use the converter with sample data.
+You can replace the paths with actual MSG files you want to convert.
+"""
+
+from pathlib import Path
+from msg_to_eml import convert_msg_to_eml, batch_convert
+
+
+def main():
+    """Example usage of the converter."""
+    print("MSG to EML Converter - Example Usage")
+    print("=" * 40)
+
+    # Example 1: Convert a single MSG file
+    print("\n1. Convert a single MSG file:")
+    print("   convert_msg_to_eml('input.msg', 'output.eml')")
+
+    # Example 2: Batch convert MSG files in a directory
+    print("\n2. Batch convert all MSG files in a directory:")
+    print("   batch_convert('input_folder/', 'output_folder/')")
+
+    # Example 3: Using the command line interface
+    print("\n3. Command line usage:")
+    print("   python -m msg_to_eml input.msg output.eml")
+    print("   python -m msg_to_eml input_folder/ output_folder/ --batch")
+
+    print("\nNote: To test with real MSG files, place them in the project directory")
+    print("and update the paths in this example script.")
+
+    # Uncomment the following lines to test with actual MSG files:
+    # try:
+    #     # Make sure you have actual MSG files to test with
+    #     sample_msg = Path("sample.msg")
+    #     if sample_msg.exists():
+    #         convert_msg_to_eml(sample_msg, "converted.eml")
+    #         print(f"Successfully converted {sample_msg}")
+    #     else:
+    #         print("No sample.msg file found. Please add a real MSG file to test.")
+    # except Exception as e:
+    #     print(f"Error during conversion: {e}")
+
+
+if __name__ == "__main__":
+    main()

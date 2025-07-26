@@ -1,0 +1,10 @@
+# Dependencies for MSG to EML conversion
+# MSG file handling
+extract-msg>=0.47.0
+# Email handling (standard library)
+
+# Development dependencies
+pytest>=7.0.0
+black>=22.0.0
+flake8>=4.0.0
+mypy>=0.910
