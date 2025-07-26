@@ -217,6 +217,12 @@ class MSGToEMLApp:
             self.log_message(f"📊 Found {stats['msg_files_found']} MSG files")
             if stats["files_ignored"] > 0:
                 self.log_message(f"⚠️  {stats['files_ignored']} non-MSG files ignored")
+                # Show some details about ignored files if there are only a few
+                if stats["files_ignored"] <= 5 and "ignored_files" in stats:
+                    for ignored_file in stats["ignored_files"]:
+                        self.log_message(f"   • {Path(ignored_file).name}")
+                elif stats["files_ignored"] > 5:
+                    self.log_message(f"   (Too many to list - includes documents, images, etc.)")
 
             # Show conversion results
             if stats["files_converted"] > 0:

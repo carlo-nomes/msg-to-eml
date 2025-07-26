@@ -108,12 +108,25 @@ def batch_convert(input_dir: Union[str, Path], output_dir: Union[str, Path], rec
         msg_files = list(input_path.glob("*.msg"))
         all_files = list(input_path.glob("*"))
 
-    # Count non-MSG files (excluding directories)
-    non_msg_files = [f for f in all_files if f.is_file() and f.suffix.lower() != ".msg"]
+    # Count non-MSG files (excluding directories and system files)
+    non_msg_files = []
+    for f in all_files:
+        if f.is_file() and f.suffix.lower() != ".msg":
+            # Skip hidden files and system files that might cause confusion
+            if not f.name.startswith(".") and not f.name.startswith("~"):
+                non_msg_files.append(f)
+
     ignored_count = len(non_msg_files)
 
     if not msg_files:
-        stats = {"msg_files_found": 0, "files_converted": 0, "files_failed": 0, "files_ignored": ignored_count, "recursive": recursive}
+        stats = {
+            "msg_files_found": 0,
+            "files_converted": 0,
+            "files_failed": 0,
+            "files_ignored": ignored_count,
+            "ignored_files": [str(f) for f in non_msg_files],
+            "recursive": recursive,
+        }
         print(f"No MSG files found in {input_path}")
         if ignored_count > 0:
             print(f"⚠️  {ignored_count} non-MSG files ignored")
@@ -152,5 +165,6 @@ def batch_convert(input_dir: Union[str, Path], output_dir: Union[str, Path], rec
         "files_failed": len(failed_files),
         "files_ignored": ignored_count,
         "failed_files": failed_files,
+        "ignored_files": [str(f) for f in non_msg_files],
         "recursive": recursive,
     }

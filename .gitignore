@@ -29,6 +29,7 @@ MANIFEST
 # Packaging for distribution
 MSG_to_EML_for_Dad/
 MSG_to_EML_Converter_for_Dad.zip
+MSG_to_EML_Converter_for_Dad_FIXED.zip
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
