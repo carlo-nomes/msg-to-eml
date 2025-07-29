@@ -79,26 +79,34 @@ def convert_msg_to_eml(msg_path: Union[str, Path], eml_path: Union[str, Path]) -
         raise ValueError(f"Failed to convert MSG file: {e}")
 
 
-def batch_convert(input_dir: Union[str, Path], output_dir: Union[str, Path], recursive: bool = True) -> dict:
+def batch_convert(input_dir: Union[str, Path], output_dir: Union[str, Path, None] = None, recursive: bool = True, output_next_to_original: bool = False) -> dict:
     """
     Convert all MSG files in a directory to EML format.
 
     Args:
         input_dir: Directory containing MSG files
-        output_dir: Directory to save EML files
+        output_dir: Directory to save EML files (ignored if output_next_to_original=True)
         recursive: Whether to search subdirectories recursively
+        output_next_to_original: If True, create EML files next to original MSG files
 
     Returns:
         Dictionary with conversion statistics
     """
     input_path = Path(input_dir)
-    output_path = Path(output_dir)
+    
+    if not output_next_to_original:
+        if output_dir is None:
+            raise ValueError("output_dir must be provided when output_next_to_original=False")
+        output_path = Path(output_dir)
+    else:
+        output_path = None  # Will be set for each file individually
 
     if not input_path.exists():
         raise FileNotFoundError(f"Input directory not found: {input_path}")
 
-    # Create output directory
-    output_path.mkdir(parents=True, exist_ok=True)
+    # Create output directory only if we're using a separate output directory
+    if output_path is not None:
+        output_path.mkdir(parents=True, exist_ok=True)
 
     # Find all MSG files (recursively or just in current directory)
     if recursive:
@@ -136,14 +144,19 @@ def batch_convert(input_dir: Union[str, Path], output_dir: Union[str, Path], rec
     failed_files = []
 
     for msg_file in msg_files:
-        # Maintain directory structure in output
-        if recursive:
-            relative_path = msg_file.relative_to(input_path)
-            eml_file = output_path / relative_path.with_suffix(".eml")
-            # Create subdirectories if needed
-            eml_file.parent.mkdir(parents=True, exist_ok=True)
+        if output_next_to_original:
+            # Place EML file next to the original MSG file
+            eml_file = msg_file.with_suffix(".eml")
         else:
-            eml_file = output_path / f"{msg_file.stem}.eml"
+            # Maintain directory structure in output directory
+            assert output_path is not None  # We checked this earlier
+            if recursive:
+                relative_path = msg_file.relative_to(input_path)
+                eml_file = output_path / relative_path.with_suffix(".eml")
+                # Create subdirectories if needed
+                eml_file.parent.mkdir(parents=True, exist_ok=True)
+            else:
+                eml_file = output_path / f"{msg_file.stem}.eml"
 
         try:
             convert_msg_to_eml(msg_file, eml_file)

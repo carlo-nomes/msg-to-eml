@@ -81,14 +81,20 @@ class MSGToEMLApp:
         ttk.Label(batch_frame, text="Output Folder:").grid(row=1, column=0, sticky=tk.W, padx=(0, 10), pady=(10, 0))
         self.batch_output = ttk.Entry(batch_frame, width=50)
         self.batch_output.grid(row=1, column=1, sticky=(tk.W, tk.E), padx=(0, 10), pady=(10, 0))
-        ttk.Button(batch_frame, text="Browse", command=self.browse_batch_output).grid(row=1, column=2, pady=(10, 0))
+        self.batch_output_button = ttk.Button(batch_frame, text="Browse", command=self.browse_batch_output)
+        self.batch_output_button.grid(row=1, column=2, pady=(10, 0))
 
         # Recursive option
         self.recursive_var = tk.BooleanVar(value=True)
         recursive_check = ttk.Checkbutton(batch_frame, text="Search subfolders recursively", variable=self.recursive_var)
         recursive_check.grid(row=2, column=0, columnspan=2, sticky=tk.W, pady=(10, 0))
 
-        ttk.Button(batch_frame, text="Convert All Files", command=self.convert_batch).grid(row=3, column=1, pady=(15, 0))
+        # Output location option
+        self.output_next_to_original_var = tk.BooleanVar(value=False)
+        output_location_check = ttk.Checkbutton(batch_frame, text="Create EML files next to original MSG files", variable=self.output_next_to_original_var, command=self.toggle_output_location)
+        output_location_check.grid(row=3, column=0, columnspan=2, sticky=tk.W, pady=(5, 0))
+
+        ttk.Button(batch_frame, text="Convert All Files", command=self.convert_batch).grid(row=4, column=1, pady=(15, 0))
 
         # Progress bar
         self.progress = ttk.Progressbar(main_frame, mode="indeterminate")
@@ -110,6 +116,7 @@ class MSGToEMLApp:
         self.log_message("Ready to convert MSG files to EML format!")
         self.log_message("Choose single file conversion or batch conversion for multiple files.")
         self.log_message("📁 Batch mode supports recursive directory scanning (searches subfolders).")
+        self.log_message("📍 Option: Create EML files next to original MSG files or in separate folder.")
 
     def browse_single_input(self):
         filename = filedialog.askopenfilename(title="Select MSG file", filetypes=[("MSG files", "*.msg"), ("All files", "*.*")])
@@ -144,6 +151,19 @@ class MSGToEMLApp:
         if dirname:
             self.batch_output.delete(0, tk.END)
             self.batch_output.insert(0, dirname)
+
+    def toggle_output_location(self):
+        """Toggle the output location mode and update UI accordingly."""
+        if self.output_next_to_original_var.get():
+            # Disable the output folder fields when creating files next to originals
+            self.batch_output.config(state="disabled")
+            self.batch_output_button.config(state="disabled")
+            self.log_message("📍 Mode: EML files will be created next to original MSG files")
+        else:
+            # Enable the output folder fields for separate output directory
+            self.batch_output.config(state="normal")
+            self.batch_output_button.config(state="normal")
+            self.log_message("📁 Mode: EML files will be created in separate output folder")
 
     def log_message(self, message):
         """Add a message to the status text area."""
@@ -184,27 +204,40 @@ class MSGToEMLApp:
     def convert_batch(self):
         """Convert multiple MSG files."""
         input_dir = self.batch_input.get().strip()
-        output_dir = self.batch_output.get().strip()
-
-        if not input_dir or not output_dir:
-            messagebox.showerror("Error", "Please select both input and output folders.")
+        output_next_to_original = self.output_next_to_original_var.get()
+        
+        if not input_dir:
+            messagebox.showerror("Error", "Please select an input folder.")
             return
+            
+        if not output_next_to_original:
+            output_dir = self.batch_output.get().strip()
+            if not output_dir:
+                messagebox.showerror("Error", "Please select an output folder or check 'Create EML files next to original MSG files'.")
+                return
+        else:
+            output_dir = None  # Will be ignored by the converter
 
         # Run conversion in background thread
-        threading.Thread(target=self._convert_batch_thread, args=(input_dir, output_dir), daemon=True).start()
+        threading.Thread(target=self._convert_batch_thread, args=(input_dir, output_dir, output_next_to_original), daemon=True).start()
 
-    def _convert_batch_thread(self, input_dir, output_dir):
+    def _convert_batch_thread(self, input_dir, output_dir, output_next_to_original):
         """Background thread for batch conversion."""
         try:
             self.progress.start()
-            self.log_message(f"Starting batch conversion from: {input_dir}")
+            if output_next_to_original:
+                self.log_message(f"Starting batch conversion from: {input_dir}")
+                self.log_message("📍 Creating EML files next to original MSG files")
+            else:
+                self.log_message(f"Starting batch conversion from: {input_dir}")
+                self.log_message(f"📁 Output directory: {output_dir}")
 
             recursive = self.recursive_var.get()
             if recursive:
                 self.log_message("🔍 Searching subdirectories recursively...")
 
             # Use the updated batch_convert function
-            stats = batch_convert(input_dir, output_dir, recursive=recursive)
+            stats = batch_convert(input_dir, output_dir, recursive=recursive, output_next_to_original=output_next_to_original)
 
             # Log detailed results
             if stats["msg_files_found"] == 0:
