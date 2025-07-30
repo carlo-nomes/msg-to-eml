@@ -73,6 +73,8 @@ extend-exclude = '''
   )/
 )
 '''
+skip-string-normalization = false
+skip-magic-trailing-comma = false
 
 [tool.mypy]
 python_version = "3.8"
