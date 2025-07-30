@@ -11,11 +11,13 @@ This guide explains how to prepare and publish `msg-to-eml` to Homebrew.
 ## Step 1: Prepare for Release
 
 1. **Update version** in `pyproject.toml`:
+
    ```toml
    version = "1.0.0"
    ```
 
 2. **Build and test the package**:
+
    ```bash
    ./scripts/build.sh
    ```
@@ -27,6 +29,7 @@ This guide explains how to prepare and publish `msg-to-eml` to Homebrew.
 ## Step 2: Get Package Information
 
 1. **Calculate SHA256** of your release tarball:
+
    ```bash
    curl -sL https://github.com/USERNAME/msg-to-eml/archive/v1.0.0.tar.gz | shasum -a 256
    ```

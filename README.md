@@ -18,12 +18,14 @@ A Python application for converting Microsoft Outlook MSG files to standard EML 
 ### From Source
 
 1. Clone this repository:
+
    ```bash
    git clone https://github.com/yourusername/msg-to-eml.git
    cd msg-to-eml
    ```
 
 2. Create and activate a virtual environment:
+
    ```bash
    python -m venv .venv
    source .venv/bin/activate  # On macOS/Linux
@@ -82,6 +84,7 @@ msg-to-eml-gui
 ```
 
 The GUI provides:
+
 - **Simple Interface**: Drag-and-drop or browse for files
 - **Batch Processing**: Select directories for bulk conversion
 - **Output Options**: Choose between separate folder or next-to-original placement
