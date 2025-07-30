@@ -1,9 +1,12 @@
-"""MSG to EML converter functionality."""
+"""MSG to EML converter functionality.
 
-import os
+This module provides functionality to convert Microsoft Outlook MSG files
+to standard EML format that can be opened by any email client.
+"""
+
 from email.message import EmailMessage
 from pathlib import Path
-from typing import Union
+from typing import Dict, List, Optional, Union
 import extract_msg
 
 
@@ -79,7 +82,35 @@ def convert_msg_to_eml(msg_path: Union[str, Path], eml_path: Union[str, Path]) -
         raise ValueError(f"Failed to convert MSG file: {e}")
 
 
-def batch_convert(input_dir: Union[str, Path], output_dir: Union[str, Path, None] = None, recursive: bool = True, output_next_to_original: bool = False) -> dict:
+def _get_output_path(msg_file: Path, input_path: Path, output_path: Optional[Path], recursive: bool, output_next_to_original: bool) -> Path:
+    """Determine the output path for a given MSG file."""
+    if output_next_to_original:
+        return msg_file.with_suffix(".eml")
+
+    assert output_path is not None, "output_path must be provided when not outputting next to original"
+
+    if recursive:
+        relative_path = msg_file.relative_to(input_path)
+        eml_file = output_path / relative_path.with_suffix(".eml")
+        # Create subdirectories if needed
+        eml_file.parent.mkdir(parents=True, exist_ok=True)
+        return eml_file
+    else:
+        return output_path / f"{msg_file.stem}.eml"
+
+
+def _filter_non_msg_files(all_files: List[Path]) -> List[Path]:
+    """Filter out non-MSG files, excluding hidden and system files."""
+    non_msg_files = []
+    for file_path in all_files:
+        if file_path.is_file() and file_path.suffix.lower() != ".msg" and not file_path.name.startswith(".") and not file_path.name.startswith("~"):
+            non_msg_files.append(file_path)
+    return non_msg_files
+
+
+def batch_convert(
+    input_dir: Union[str, Path], output_dir: Optional[Union[str, Path]] = None, recursive: bool = True, output_next_to_original: bool = False
+) -> Dict[str, Union[int, List[str], bool]]:
     """
     Convert all MSG files in a directory to EML format.
 
@@ -90,10 +121,21 @@ def batch_convert(input_dir: Union[str, Path], output_dir: Union[str, Path, None
         output_next_to_original: If True, create EML files next to original MSG files
 
     Returns:
-        Dictionary with conversion statistics
+        Dictionary with conversion statistics including:
+        - msg_files_found: Number of MSG files found
+        - files_converted: Number of files successfully converted
+        - files_failed: Number of files that failed conversion
+        - files_ignored: Number of non-MSG files ignored
+        - failed_files: List of failed file paths
+        - ignored_files: List of ignored file paths
+        - recursive: Whether recursive search was used
+
+    Raises:
+        FileNotFoundError: If input directory doesn't exist
+        ValueError: If output_dir is required but not provided
     """
     input_path = Path(input_dir)
-    
+
     if not output_next_to_original:
         if output_dir is None:
             raise ValueError("output_dir must be provided when output_next_to_original=False")
@@ -109,21 +151,16 @@ def batch_convert(input_dir: Union[str, Path], output_dir: Union[str, Path, None
         output_path.mkdir(parents=True, exist_ok=True)
 
     # Find all MSG files (recursively or just in current directory)
+    file_pattern = "*.msg"
     if recursive:
-        msg_files = list(input_path.rglob("*.msg"))
+        msg_files = list(input_path.rglob(file_pattern))
         all_files = list(input_path.rglob("*"))
     else:
-        msg_files = list(input_path.glob("*.msg"))
+        msg_files = list(input_path.glob(file_pattern))
         all_files = list(input_path.glob("*"))
 
     # Count non-MSG files (excluding directories and system files)
-    non_msg_files = []
-    for f in all_files:
-        if f.is_file() and f.suffix.lower() != ".msg":
-            # Skip hidden files and system files that might cause confusion
-            if not f.name.startswith(".") and not f.name.startswith("~"):
-                non_msg_files.append(f)
-
+    non_msg_files = _filter_non_msg_files(all_files)
     ignored_count = len(non_msg_files)
 
     if not msg_files:
@@ -144,21 +181,8 @@ def batch_convert(input_dir: Union[str, Path], output_dir: Union[str, Path, None
     failed_files = []
 
     for msg_file in msg_files:
-        if output_next_to_original:
-            # Place EML file next to the original MSG file
-            eml_file = msg_file.with_suffix(".eml")
-        else:
-            # Maintain directory structure in output directory
-            assert output_path is not None  # We checked this earlier
-            if recursive:
-                relative_path = msg_file.relative_to(input_path)
-                eml_file = output_path / relative_path.with_suffix(".eml")
-                # Create subdirectories if needed
-                eml_file.parent.mkdir(parents=True, exist_ok=True)
-            else:
-                eml_file = output_path / f"{msg_file.stem}.eml"
-
         try:
+            eml_file = _get_output_path(msg_file, input_path, output_path, recursive, output_next_to_original)
             convert_msg_to_eml(msg_file, eml_file)
             success_count += 1
         except Exception as e:

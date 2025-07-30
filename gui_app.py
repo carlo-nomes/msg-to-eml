@@ -91,7 +91,12 @@ class MSGToEMLApp:
 
         # Output location option
         self.output_next_to_original_var = tk.BooleanVar(value=False)
-        output_location_check = ttk.Checkbutton(batch_frame, text="Create EML files next to original MSG files", variable=self.output_next_to_original_var, command=self.toggle_output_location)
+        output_location_check = ttk.Checkbutton(
+            batch_frame,
+            text="Create EML files next to original MSG files",
+            variable=self.output_next_to_original_var,
+            command=self.toggle_output_location,
+        )
         output_location_check.grid(row=3, column=0, columnspan=2, sticky=tk.W, pady=(5, 0))
 
         ttk.Button(batch_frame, text="Convert All Files", command=self.convert_batch).grid(row=4, column=1, pady=(15, 0))
@@ -205,11 +210,11 @@ class MSGToEMLApp:
         """Convert multiple MSG files."""
         input_dir = self.batch_input.get().strip()
         output_next_to_original = self.output_next_to_original_var.get()
-        
+
         if not input_dir:
             messagebox.showerror("Error", "Please select an input folder.")
             return
-            
+
         if not output_next_to_original:
             output_dir = self.batch_output.get().strip()
             if not output_dir:
