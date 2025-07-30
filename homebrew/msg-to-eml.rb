@@ -2,7 +2,7 @@ class MsgToEml < Formula
   include Language::Python::Virtualenv
 
   desc "Convert Microsoft Outlook MSG files to EML format with CLI and GUI"
-  homepage "https://github.com/yourusername/msg-to-eml"
+  homepage "https://github.com/carlonomes/msg-to-eml"
   url "https://files.pythonhosted.org/packages/source/m/msg-to-eml/msg-to-eml-1.0.0.tar.gz"
   sha256 "YOUR_SHA256_HASH_HERE"
   license "MIT"

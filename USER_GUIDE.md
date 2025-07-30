@@ -1,5 +1,7 @@
 # MSG to EML Converter - User Guide
 
+*Created by Carlo & Alex (AI Assistant)*
+
 ## Getting Started
 
 This application converts Microsoft Outlook MSG email files to the standard EML format, making them compatible with any email program like Mail, Outlook, or Thunderbird.

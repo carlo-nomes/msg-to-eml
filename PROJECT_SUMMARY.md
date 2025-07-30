@@ -1,5 +1,7 @@
 # Project Summary: MSG to EML Converter
 
+*Created by Carlo & Alex (AI Assistant)*
+
 ## ✅ Professional CLI/GUI Application Ready for Homebrew
 
 ### 🔄 Project Evolution

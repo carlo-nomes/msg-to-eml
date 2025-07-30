@@ -46,14 +46,14 @@ class MSGToEMLApp:
         )
         title_label.grid(row=0, column=0, columnspan=3, pady=(0, 20))
 
-        # AI attribution
-        ai_label = ttk.Label(
+        # Authors attribution
+        authors_label = ttk.Label(
             main_frame,
-            text="🤖 This app was completely created by AI",
+            text="Created by Carlo & Alex (AI Assistant)",
             font=("Arial", 10),
             foreground="gray",
         )
-        ai_label.grid(row=1, column=0, columnspan=3, pady=(0, 20))
+        authors_label.grid(row=1, column=0, columnspan=3, pady=(0, 20))
 
         # Single file conversion section
         single_frame = ttk.LabelFrame(

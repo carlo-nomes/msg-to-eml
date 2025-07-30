@@ -31,7 +31,7 @@ This guide explains how to prepare and publish `msg-to-eml` to Homebrew.
 1. **Calculate SHA256** of your release tarball:
 
    ```bash
-   curl -sL https://github.com/USERNAME/msg-to-eml/archive/v1.0.0.tar.gz | shasum -a 256
+   curl -sL https://github.com/carlonomes/msg-to-eml/archive/v1.0.0.tar.gz | shasum -a 256
    ```
 
 2. **Get dependency SHA256s**:
@@ -50,8 +50,8 @@ class MsgToEml < Formula
   include Language::Python::Virtualenv
 
   desc "Convert Microsoft Outlook MSG files to EML format with CLI and GUI"
-  homepage "https://github.com/USERNAME/msg-to-eml"
-  url "https://github.com/USERNAME/msg-to-eml/archive/v1.0.0.tar.gz"
+  homepage "https://github.com/carlonomes/msg-to-eml"
+  url "https://github.com/carlonomes/msg-to-eml/archive/v1.0.0.tar.gz"
   sha256 "YOUR_ACTUAL_SHA256_HERE"
   license "MIT"
 
@@ -87,7 +87,7 @@ end
 2. Add your formula as `Formula/msg-to-eml.rb`
 3. Users install with:
    ```bash
-   brew tap USERNAME/tools
+   brew tap carlonomes/tools
    brew install msg-to-eml
    ```
 

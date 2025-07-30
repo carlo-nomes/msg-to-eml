@@ -2,6 +2,8 @@
 
 A Python application for converting Microsoft Outlook MSG files to standard EML format, featuring both command-line and graphical interfaces.
 
+*Created by Carlo & Alex (AI Assistant)*
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 
@@ -20,7 +22,7 @@ A Python application for converting Microsoft Outlook MSG files to standard EML 
 1. Clone this repository:
 
    ```bash
-   git clone https://github.com/yourusername/msg-to-eml.git
+   git clone https://github.com/carlonomes/msg-to-eml.git
    cd msg-to-eml
    ```
 
@@ -156,6 +158,11 @@ This project uses [Black](https://black.readthedocs.io/) for code formatting wit
 4. Run tests and formatting checks
 5. Submit a pull request
 
+## Authors
+
+- **Carlo** - Project lead and implementation
+- **Alex** - AI Assistant for development and documentation
+
 ## License
 
-MIT License
+MIT License - see the [LICENSE](LICENSE) file for details.

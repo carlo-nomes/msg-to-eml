@@ -10,7 +10,8 @@ readme = "README.md"
 requires-python = ">=3.8"
 license = {text = "MIT"}
 authors = [
-    {name = "AI Assistant", email = "ai@example.com"},
+    {name = "Carlo", email = "carlo@example.com"},
+    {name = "Alex (AI Assistant)", email = "alex.ai@example.com"},
 ]
 keywords = ["msg", "eml", "email", "converter", "outlook"]
 classifiers = [
@@ -50,8 +51,8 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/yourusername/msg-to-eml"
-Repository = "https://github.com/yourusername/msg-to-eml"
+Homepage = "https://github.com/carlonomes/msg-to-eml"
+Repository = "https://github.com/carlonomes/msg-to-eml"
 
 [tool.black]
 line-length = 88
