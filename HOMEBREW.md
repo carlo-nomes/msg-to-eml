@@ -37,8 +37,8 @@ This guide explains how to prepare and publish `msg-to-eml` to Homebrew.
 2. **Get dependency SHA256s**:
    ```bash
    # For extract-msg
-   pip download extract-msg==0.47.0 --no-deps
-   shasum -a 256 extract_msg-0.47.0.tar.gz
+   pip download extract-msg==0.54.1 --no-deps
+   shasum -a 256 extract_msg-0.54.1.tar.gz
    ```
 
 ## Step 3: Create Homebrew Formula
@@ -58,7 +58,7 @@ class MsgToEml < Formula
   depends_on "python@3.11"
 
   resource "extract-msg" do
-    url "https://files.pythonhosted.org/packages/source/e/extract-msg/extract_msg-0.47.0.tar.gz"
+    url "https://files.pythonhosted.org/packages/source/e/extract-msg/extract_msg-0.54.1.tar.gz"
     sha256 "EXTRACT_MSG_SHA256_HERE"
   end
 
