@@ -11,15 +11,15 @@ rm -rf build/ dist/ src/msg_to_eml.egg-info/
 
 # Install in development mode for testing
 echo "📦 Installing in development mode..."
-pip install -e .
+.venv/bin/pip install -e .
 
 # Run tests
 echo "🧪 Running tests..."
-python -m pytest tests/ -v
+.venv/bin/python -m pytest tests/ -v
 
 # Build wheel for distribution
 echo "🏗️  Building distribution packages..."
-python -m build
+.venv/bin/python -m build
 
 echo "✅ Build complete!"
 echo "📦 Distribution files:"

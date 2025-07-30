@@ -6,6 +6,15 @@ __pycache__/
 # C extensions
 *.so
 
+# macOS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
 # Distribution / packaging
 .Python
 build/
@@ -27,7 +36,9 @@ share/python-wheels/
 MANIFEST
 
 # Packaging for distribution
-MSG_to_EML_for_Dad/
+dist/
+build/
+*.app/
 MSG_to_EML_Converter_for_Dad.zip
 MSG_to_EML_Converter_for_Dad_FIXED.zip
 
