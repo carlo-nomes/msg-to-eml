@@ -22,11 +22,62 @@ A Python project for converting MSG files to EML format.
 
 ## Usage
 
+### Command Line Interface
+
+The converter provides a comprehensive CLI with support for single file conversion, batch processing, and flexible output options.
+
+#### Basic Usage
+
+```bash
+# Convert a single MSG file
+python -m msg_to_eml email.msg email.eml
+
+# Batch convert all MSG files in a directory to separate output folder
+python -m msg_to_eml input_folder/ output_folder/ --batch
+
+# Batch convert with EML files created next to original MSG files
+python -m msg_to_eml input_folder/ --batch --next-to-original
+```
+
+#### Advanced Options
+
+```bash
+# Convert without searching subdirectories
+python -m msg_to_eml input_folder/ output_folder/ --batch --no-recursive
+
+# Quiet mode (suppress progress output)
+python -m msg_to_eml input_folder/ output_folder/ --batch --quiet
+
+# View all available options
+python -m msg_to_eml --help
+```
+
+#### CLI Options
+
+- `--batch`: Enable batch conversion mode for directories
+- `--recursive`: Search subdirectories recursively (default: enabled)
+- `--no-recursive`: Disable recursive directory search
+- `--next-to-original`: Create EML files next to original MSG files
+- `--quiet, -q`: Suppress progress output
+- `--help, -h`: Show help message and examples
+
+### Python API
+
 ```python
-from msg_to_eml import convert_msg_to_eml
+from msg_to_eml import convert_msg_to_eml, batch_convert
 
 # Convert a single MSG file
 convert_msg_to_eml('input.msg', 'output.eml')
+
+# Batch convert with options
+stats = batch_convert(
+    input_dir='msg_files/',
+    output_dir='eml_files/',
+    recursive=True,
+    output_next_to_original=False
+)
+
+print(f"Converted {stats['files_converted']} files")
 ```
 
 ## Development
