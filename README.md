@@ -22,7 +22,7 @@ A Python application for converting Microsoft Outlook MSG files to standard EML 
 1. Clone this repository:
 
    ```bash
-   git clone https://github.com/carlonomes/msg-to-eml.git
+   git clone https://github.com/carlo-nomes/msg-to-eml.git
    cd msg-to-eml
    ```
 

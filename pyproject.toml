@@ -51,8 +51,8 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/carlonomes/msg-to-eml"
-Repository = "https://github.com/carlonomes/msg-to-eml"
+Homepage = "https://github.com/carlo-nomes/msg-to-eml"
+Repository = "https://github.com/carlo-nomes/msg-to-eml"
 
 [tool.black]
 line-length = 88
