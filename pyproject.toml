@@ -4,16 +4,18 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "msg-to-eml"
-version = "0.1.0"
-description = "Convert MSG files to EML format (AI-generated project)"
+version = "1.0.0"
+description = "Convert Microsoft Outlook MSG files to EML format with CLI and GUI"
 readme = "README.md"
 requires-python = ">=3.8"
 license = {text = "MIT"}
 authors = [
-    {name = "AI (GitHub Copilot)", email = "ai-generated@example.com"},
+    {name = "AI Assistant", email = "ai@example.com"},
 ]
+keywords = ["msg", "eml", "email", "converter", "outlook"]
 classifiers = [
-    "Development Status :: 3 - Alpha",
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: End Users/Desktop",
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
@@ -21,10 +23,21 @@ classifiers = [
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Communications :: Email",
+    "Topic :: Utilities",
 ]
 dependencies = [
     "extract-msg>=0.47.0",
 ]
+
+[project.scripts]
+msg-to-eml = "msg_to_eml.__main__:main"
+msg2eml = "msg_to_eml.__main__:main"
+
+[project.gui-scripts]
+msg-to-eml-gui = "msg_to_eml.gui:main"
 
 [project.optional-dependencies]
 dev = [
@@ -41,6 +54,25 @@ Repository = "https://github.com/yourusername/msg-to-eml"
 [tool.black]
 line-length = 88
 target-version = ['py38']
+include = '\.pyi?$'
+extend-exclude = '''
+# Exclude build and distribution directories
+(
+  /(
+      \.eggs
+    | \.git
+    | \.hg
+    | \.mypy_cache
+    | \.tox
+    | \.venv
+    | _build
+    | buck-out
+    | build
+    | dist
+    | __pycache__
+  )/
+)
+'''
 
 [tool.mypy]
 python_version = "3.8"

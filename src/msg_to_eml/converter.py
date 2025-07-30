@@ -66,7 +66,10 @@ def convert_msg_to_eml(msg_path: Union[str, Path], eml_path: Union[str, Path]) -
             for attachment in msg.attachments:
                 if hasattr(attachment, "data") and hasattr(attachment, "longFilename"):
                     eml_msg.add_attachment(
-                        attachment.data, maintype="application", subtype="octet-stream", filename=attachment.longFilename or "attachment"
+                        attachment.data,
+                        maintype="application",
+                        subtype="octet-stream",
+                        filename=attachment.longFilename or "attachment",
                     )
 
         # Close the MSG file
@@ -82,12 +85,20 @@ def convert_msg_to_eml(msg_path: Union[str, Path], eml_path: Union[str, Path]) -
         raise ValueError(f"Failed to convert MSG file: {e}")
 
 
-def _get_output_path(msg_file: Path, input_path: Path, output_path: Optional[Path], recursive: bool, output_next_to_original: bool) -> Path:
+def _get_output_path(
+    msg_file: Path,
+    input_path: Path,
+    output_path: Optional[Path],
+    recursive: bool,
+    output_next_to_original: bool,
+) -> Path:
     """Determine the output path for a given MSG file."""
     if output_next_to_original:
         return msg_file.with_suffix(".eml")
 
-    assert output_path is not None, "output_path must be provided when not outputting next to original"
+    assert (
+        output_path is not None
+    ), "output_path must be provided when not outputting next to original"
 
     if recursive:
         relative_path = msg_file.relative_to(input_path)
@@ -103,13 +114,21 @@ def _filter_non_msg_files(all_files: List[Path]) -> List[Path]:
     """Filter out non-MSG files, excluding hidden and system files."""
     non_msg_files = []
     for file_path in all_files:
-        if file_path.is_file() and file_path.suffix.lower() != ".msg" and not file_path.name.startswith(".") and not file_path.name.startswith("~"):
+        if (
+            file_path.is_file()
+            and file_path.suffix.lower() != ".msg"
+            and not file_path.name.startswith(".")
+            and not file_path.name.startswith("~")
+        ):
             non_msg_files.append(file_path)
     return non_msg_files
 
 
 def batch_convert(
-    input_dir: Union[str, Path], output_dir: Optional[Union[str, Path]] = None, recursive: bool = True, output_next_to_original: bool = False
+    input_dir: Union[str, Path],
+    output_dir: Optional[Union[str, Path]] = None,
+    recursive: bool = True,
+    output_next_to_original: bool = False,
 ) -> Dict[str, Union[int, List[str], bool]]:
     """
     Convert all MSG files in a directory to EML format.
@@ -138,7 +157,9 @@ def batch_convert(
 
     if not output_next_to_original:
         if output_dir is None:
-            raise ValueError("output_dir must be provided when output_next_to_original=False")
+            raise ValueError(
+                "output_dir must be provided when output_next_to_original=False"
+            )
         output_path = Path(output_dir)
     else:
         output_path = None  # Will be set for each file individually
@@ -182,7 +203,9 @@ def batch_convert(
 
     for msg_file in msg_files:
         try:
-            eml_file = _get_output_path(msg_file, input_path, output_path, recursive, output_next_to_original)
+            eml_file = _get_output_path(
+                msg_file, input_path, output_path, recursive, output_next_to_original
+            )
             convert_msg_to_eml(msg_file, eml_file)
             success_count += 1
         except Exception as e:
@@ -190,7 +213,9 @@ def batch_convert(
             failed_files.append(str(msg_file))
 
     # Print summary
-    print(f"Successfully converted {success_count}/{len(msg_files)} MSG files to EML format")
+    print(
+        f"Successfully converted {success_count}/{len(msg_files)} MSG files to EML format"
+    )
     if ignored_count > 0:
         print(f"⚠️  {ignored_count} non-MSG files ignored")
     if recursive:

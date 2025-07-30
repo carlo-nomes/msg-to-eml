@@ -32,7 +32,7 @@ def build_mac_app():
         f"--distpath={project_dir}/dist",
         f"--workpath={project_dir}/build",
         f"--specpath={project_dir}",
-        str(project_dir / "gui_app.py"),
+        str(project_dir / "src" / "msg_to_eml" / "gui.py"),
     ]
 
     print(f"Running: {' '.join(cmd)}")
