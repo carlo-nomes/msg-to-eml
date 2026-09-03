@@ -1,6 +1,6 @@
 # Project Summary: MSG to EML Converter
 
-*Created by Carlo & Alex (AI Assistant)*
+*Created by Carlo*
 
 ## ✅ Professional CLI/GUI Application
 

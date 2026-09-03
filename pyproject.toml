@@ -11,7 +11,6 @@ requires-python = ">=3.8"
 license = {text = "MIT"}
 authors = [
     {name = "Carlo", email = "carlo@example.com"},
-    {name = "Alex (AI Assistant)", email = "alex.ai@example.com"},
 ]
 keywords = ["msg", "eml", "email", "converter", "outlook"]
 classifiers = [

@@ -49,7 +49,7 @@ class MSGToEMLApp:
         # Authors attribution
         authors_label = ttk.Label(
             main_frame,
-            text="Created by Carlo & Alex (AI Assistant)",
+            text="Created by Carlo",
             font=("Arial", 10),
             foreground="gray",
         )

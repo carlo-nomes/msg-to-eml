@@ -2,7 +2,7 @@
 
 A Python application for converting Microsoft Outlook MSG files to standard EML format, featuring both command-line and graphical interfaces.
 
-*Created by Carlo & Alex (AI Assistant)*
+*Created by Carlo*
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
@@ -154,7 +154,6 @@ This project uses [Black](https://black.readthedocs.io/) for code formatting wit
 ## Authors
 
 - **Carlo** - Project lead and implementation
-- **Alex** - AI Assistant for development and documentation
 
 ## License
 

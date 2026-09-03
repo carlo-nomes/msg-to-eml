@@ -1,6 +1,6 @@
 # MSG to EML Converter - User Guide
 
-*Created by Carlo & Alex (AI Assistant)*
+*Created by Carlo*
 
 ## Getting Started
 
