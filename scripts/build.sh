@@ -24,7 +24,3 @@ echo "🏗️  Building distribution packages..."
 echo "✅ Build complete!"
 echo "📦 Distribution files:"
 ls -la dist/
-
-echo ""
-echo "🍺 Ready for Homebrew!"
-echo "   The wheel file in dist/ can be used for Homebrew formula"

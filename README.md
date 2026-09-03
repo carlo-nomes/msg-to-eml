@@ -13,7 +13,6 @@ A Python application for converting Microsoft Outlook MSG files to standard EML 
 - **Batch Processing**: Convert multiple files at once
 - **Flexible Output**: Choose output location or place next to originals
 - **Cross-Platform**: Works on macOS, Linux, and Windows
-- **Homebrew Ready**: Easy installation via Homebrew (coming soon)
 
 ## Installation
 
@@ -38,12 +37,6 @@ A Python application for converting Microsoft Outlook MSG files to standard EML 
    ```bash
    pip install -e .
    ```
-
-### Via Homebrew (Coming Soon)
-
-```bash
-brew install msg-to-eml
-```
 
 ## Usage
 
